@@ -3,13 +3,13 @@ package org.launchcode.javawebdevtechjobspersistent.models;
 import javax.persistence.Entity;
 
 @Entity
-public class Skill extends AbstractEntity {
+public class skill extends AbstractEntity {
 
   private String description;
 
-  public Skill() {}
+  public skill() {}
 
-  public Skill(String description) {
+  public skill(String description) {
     this.description = description;
   }
 

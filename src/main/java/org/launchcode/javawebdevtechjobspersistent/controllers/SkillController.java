@@ -1,7 +1,6 @@
 package org.launchcode.javawebdevtechjobspersistent.controllers;
 
-import org.launchcode.javawebdevtechjobspersistent.models.Employer;
-import org.launchcode.javawebdevtechjobspersistent.models.Skill;
+import org.launchcode.javawebdevtechjobspersistent.models.skill;
 import org.launchcode.javawebdevtechjobspersistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,12 +26,12 @@ public class SkillController {
 
   @GetMapping("add")
   public String displayAddSkillForm(Model model) {
-    model.addAttribute(new Skill()); // Spring will implicitly create the label "skill", which is the lowercase version of the class name.
+    model.addAttribute(new skill()); // Spring will implicitly create the label "skill", which is the lowercase version of the class name.
     return "skills/add";
   }
 
   @PostMapping("add")
-  public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill, Errors errors, Model model) {
+  public String processAddSkillForm(@ModelAttribute @Valid skill newSkill, Errors errors, Model model) {
 
     if (errors.hasErrors()) {
       return "skills/add";
@@ -46,7 +45,7 @@ public class SkillController {
 
     Optional optSkill = skillRepository.findById(skillId);
     if (optSkill.isPresent()) {
-      Skill skill = (Skill) optSkill.get();
+      skill skill = (org.launchcode.javawebdevtechjobspersistent.models.skill) optSkill.get();
       model.addAttribute("skill", skill);
       return "skills/view";
     } else {
