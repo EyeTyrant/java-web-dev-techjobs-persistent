@@ -1,5 +1,6 @@
 package org.launchcode.javawebdevtechjobspersistent.controllers;
 
+import org.launchcode.javawebdevtechjobspersistent.models.Employer;
 import org.launchcode.javawebdevtechjobspersistent.models.Job;
 import org.launchcode.javawebdevtechjobspersistent.models.data.EmployerRepository;
 import org.launchcode.javawebdevtechjobspersistent.models.data.JobRepository;
@@ -47,17 +48,21 @@ public class HomeController {
 
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                                       Errors errors, Model model,
-                                    @RequestParam int employerId,
-                                    @RequestParam List<Integer> skills) {
+                                    Errors errors, Model model, int employerId,
+                                    @RequestParam(required = false) List<Integer> skills) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             return "add";
         }
 
-        model.addAttribute("employers", employerRepository.findById(employerId));
-//        skillRepository.findAll();
+//        Optional<Employer> tempEmp = employerRepository.findById(employerId);
+//        if (tempEmp.isPresent()){
+//            Employer employer = tempEmp.get();
+//            newJob.setEmployer(employer);
+//        }
+        newJob.setEmployer(employerRepository.findById(employerId).get());
+
         jobRepository.save(newJob);
         return "redirect:";
     }
