@@ -1,6 +1,8 @@
 package org.launchcode.javawebdevtechjobspersistent.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Job extends AbstractEntity{
@@ -16,7 +18,7 @@ public class Job extends AbstractEntity{
     private Employer employer;
 
     @ManyToMany
-    private Skill skills;
+    private List<Skill> skills = new ArrayList<>();
 
     public Job() {
     }
@@ -24,7 +26,7 @@ public class Job extends AbstractEntity{
     public Job(Employer anEmployer, Skill someSkills) {
         super();
         this.employer = anEmployer;
-        this.skills = someSkills;
+        this.skills = (List<Skill>) someSkills;
     }
 
     // Getters and setters.
@@ -46,11 +48,11 @@ public class Job extends AbstractEntity{
     }
 
     public Skill getSkills() {
-        return skills;
+        return (Skill) skills;
     }
 
     public void setSkills(Skill skills) {
-        this.skills = skills;
+        this.skills = (List<Skill>) skills;
     }
 
 }
