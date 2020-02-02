@@ -53,7 +53,7 @@ public class HomeController {
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
                                     Errors errors, Model model,
                                     @RequestParam int employerId,
-                                    @RequestParam(required = false) List<Integer> skills) {
+                                    @RequestParam List<Integer> skills) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
@@ -67,13 +67,17 @@ public class HomeController {
         }
 //        newJob.setEmployer(employerRepository.findById(employerId).get());
 
+
+
         List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
         newJob.setSkills(skillObjs);
-//
+
 //        newJob.setSkills((List<Skill>) skillRepository.findAllById(skills));
         jobRepository.save(newJob);
         return "redirect:";
     }
+
+
 
     @GetMapping("view/{jobId}")
     public String displayViewJob(Model model, @PathVariable int jobId) {
