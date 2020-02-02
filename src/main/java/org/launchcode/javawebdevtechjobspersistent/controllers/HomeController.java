@@ -1,5 +1,6 @@
 package org.launchcode.javawebdevtechjobspersistent.controllers;
 
+import org.launchcode.javawebdevtechjobspersistent.models.Employer;
 import org.launchcode.javawebdevtechjobspersistent.models.Job;
 import org.launchcode.javawebdevtechjobspersistent.models.Skill;
 import org.launchcode.javawebdevtechjobspersistent.models.data.EmployerRepository;
@@ -35,6 +36,7 @@ public class HomeController {
     public String index(Model model) {
 
         model.addAttribute("title", "My Jobs");
+        model.addAttribute("jobs", jobRepository.findAll());
         return "index";
     }
 
@@ -49,19 +51,26 @@ public class HomeController {
 
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                                       Errors errors, Model model,
+                                    Errors errors, Model model,
                                     @RequestParam int employerId,
-                                    @RequestParam List<Integer> skills) {
+                                    @RequestParam(required = false) List<Integer> skills) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             return "add";
         }
 
-        model.addAttribute("employers", employerRepository.findById(employerId));
+        Optional<Employer> tempEmp = employerRepository.findById(employerId);
+        if (tempEmp.isPresent()){
+            Employer employer = tempEmp.get();
+            newJob.setEmployer(employer);
+        }
+//        newJob.setEmployer(employerRepository.findById(employerId).get());
+
         List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
-        newJob.setSkills((Skill) skillObjs);
-//        skillRepository.findAll();
+        newJob.setSkills(skillObjs);
+//
+//        newJob.setSkills((List<Skill>) skillRepository.findAllById(skills));
         jobRepository.save(newJob);
         return "redirect:";
     }
