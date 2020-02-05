@@ -1,5 +1,6 @@
 package org.launchcode.javawebdevtechjobspersistent.controllers;
 
+import com.sun.xml.bind.v2.TODO;
 import org.launchcode.javawebdevtechjobspersistent.models.Employer;
 import org.launchcode.javawebdevtechjobspersistent.models.Job;
 import org.launchcode.javawebdevtechjobspersistent.models.Skill;
@@ -48,6 +49,7 @@ public class HomeController {
         model.addAttribute("job", new Job());
         return "add";
     }
+      //  TODO #1 handle no skill selected error
 
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
