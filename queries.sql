@@ -8,3 +8,7 @@ SELECT name FROM employer WHERE location = "Saint Louis";
 DROP TABLE job;
 
 ## Part 4: Test it with SQL
+SELECT DISTINCT skill.name, skill.description
+FROM skill
+JOIN job_skills ON skill.id = skill.id
+WHERE jobs_id IS NOT NULL;
