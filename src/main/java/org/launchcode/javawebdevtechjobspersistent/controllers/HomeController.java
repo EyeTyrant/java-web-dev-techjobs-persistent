@@ -23,69 +23,74 @@ import java.util.Optional;
 @Controller
 public class HomeController {
 
-    @Autowired
-    private EmployerRepository employerRepository;
+  @Autowired
+  private EmployerRepository employerRepository;
 
-    @Autowired
-    private SkillRepository skillRepository;
+  @Autowired
+  private SkillRepository skillRepository;
 
-    @Autowired
-    private JobRepository jobRepository;
+  @Autowired
+  private JobRepository jobRepository;
 
 
-    @RequestMapping("")
-    public String index(Model model) {
+  @RequestMapping("")
+  public String index(Model model) {
 
-        model.addAttribute("title", "My Jobs");
-        model.addAttribute("jobs", jobRepository.findAll());
-        return "index";
+    model.addAttribute("title", "My Jobs");
+    model.addAttribute("jobs", jobRepository.findAll());
+    return "index";
+  }
+
+  @GetMapping("add")
+  public String displayAddJobForm(Model model) {
+    model.addAttribute("title", "Add Job");
+    model.addAttribute("employers", employerRepository.findAll());
+    model.addAttribute("skills", skillRepository.findAll());
+    model.addAttribute(new Job());
+    return "add";
+  }
+
+
+
+  @PostMapping("add")
+  public String processAddJobForm(@ModelAttribute @Valid Job newJob,
+                                  @RequestParam Integer employerId,
+                                  @RequestParam List<Integer> skills,
+                                  Errors errors, Model model) {
+
+    if (errors.hasErrors()) {
+      model.addAttribute("title", "Add Job");
+      return "add";
     }
 
-    @GetMapping("add")
-    public String displayAddJobForm(Model model) {
-        model.addAttribute("title", "Add Job");
-        model.addAttribute("employers", employerRepository.findAll());
-        model.addAttribute("skills", skillRepository.findAll());
-        model.addAttribute("job", new Job());
-        return "add";
-    }
-      //  TODO #1 handle no skill selected error
-
-    @PostMapping("add")
-    public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                                    @RequestParam Integer employerId,
-                                    @RequestParam List<Integer> skills,
-                                    Errors errors, Model model){
-
-            if (errors.hasErrors()) {
-                model.addAttribute("title", "Add Job");
-                return "add";
-            }
-
-            Optional<Employer> tempEmp = employerRepository.findById(employerId);
-            if (tempEmp.isPresent()) {
-                Employer employer = tempEmp.get();
-                newJob.setEmployer(employer);
-            }
-
-            List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
-            newJob.setSkills(skillObjs);
-
-//        newJob.setEmployer(employerRepository.findById(employerId).get());
-//        newJob.setSkills((List<Skill>) skillRepository.findAllById(skills));
-        jobRepository.save(newJob);
-        return "redirect:";
+    Optional<Employer> tempEmp = employerRepository.findById(employerId);
+    if (tempEmp.isPresent()) {
+      Employer employer = tempEmp.get();
+      newJob.setEmployer(employer);
     }
 
+    List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+
+        newJob.setSkills(skillObjs);
 
 
-    @GetMapping("view/{jobId}")
-    public String displayViewJob(Model model, @PathVariable int jobId) {
-        Optional<Job> tempJob = jobRepository.findById(jobId);
-        Job career = tempJob.get();
-        model.addAttribute("job", career);
-        return "view";
-    }
+    jobRepository.save(newJob);
+    return "redirect:";
+  }
+
+
+
+
+
+  @GetMapping("view/{jobId}")
+  public String displayViewJob(Model model, @PathVariable int jobId) {
+    Optional<Job> tempJob = jobRepository.findById(jobId);
+    Job career = tempJob.get();
+    model.addAttribute("job", career);
+    return "view";
+  }
 
 
 }
+//        newJob.setEmployer(employerRepository.findById(employerId).get());
+//        newJob.setSkills((List<Skill>) skillRepository.findAllById(skills));

@@ -10,42 +10,42 @@ import java.util.Objects;
 @MappedSuperclass
 public abstract class AbstractEntity {
 
-    @Id
-    @GeneratedValue
-    private int id;
+  @Id
+  @GeneratedValue
+  private int id;
 
-    @NotBlank(message = "Must add a name")
-    @Size(min=2, max=100, message = "Name length must be 2-100 characters")
-    private String name;
+  @NotBlank(message = "Must add a name")
+  @Size(min = 2, max = 100, message = "Name length must be 2-100 characters")
+  private String name;
 
-    public int getId() {
-        return id;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    @Override
-    public String toString() {
-        return name;
-    }
+  @Override
+  public String toString() {
+    return name;
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AbstractEntity that = (AbstractEntity) o;
-        return id == that.id;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    AbstractEntity that = (AbstractEntity) o;
+    return id == that.id;
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 
 }

@@ -24,44 +24,44 @@ import java.util.HashMap;
 @RequestMapping(value = "list")
 public class ListController {
 
-    @Autowired
-    private EmployerRepository employerRepository;
+  @Autowired
+  private EmployerRepository employerRepository;
 
-    @Autowired
-    private SkillRepository skillRepository;
+  @Autowired
+  private SkillRepository skillRepository;
 
-    @Autowired
-    private JobRepository jobRepository;
+  @Autowired
+  private JobRepository jobRepository;
 
-    static HashMap<String, String> columnChoices = new HashMap<>();
+  static HashMap<String, String> columnChoices = new HashMap<>();
 
-    public ListController () {
+  public ListController() {
 
-        columnChoices.put("all", "All");
-        columnChoices.put("employer", "Employer");
-        columnChoices.put("skill", "Skill");
+    columnChoices.put("all", "All");
+    columnChoices.put("employer", "Employer");
+    columnChoices.put("skill", "Skill");
 
+  }
+
+  @RequestMapping("")
+  public String list(Model model) {
+    model.addAttribute("employers", employerRepository.findAll());
+    model.addAttribute("skills", skillRepository.findAll());
+    return "list";
+  }
+
+  @RequestMapping(value = "jobs")
+  public String listJobsByColumnAndValue(Model model, @RequestParam String column, @RequestParam String value) {
+    Iterable<Job> jobs;
+    if (column.toLowerCase().equals("all")) {
+      jobs = jobRepository.findAll();
+      model.addAttribute("title", "All Jobs");
+    } else {
+      jobs = JobData.findByColumnAndValue(column, value, jobRepository.findAll());
+      model.addAttribute("title", "Jobs with " + columnChoices.get(column) + ": " + value);
     }
+    model.addAttribute("jobs", jobs);
 
-    @RequestMapping("")
-    public String list(Model model) {
-        model.addAttribute("employers", employerRepository.findAll());
-        model.addAttribute("skills", skillRepository.findAll());
-        return "list";
-    }
-
-    @RequestMapping(value = "jobs")
-    public String listJobsByColumnAndValue(Model model,@RequestParam String column,@RequestParam String value) {
-        Iterable<Job> jobs;
-        if (column.toLowerCase().equals("all")){
-            jobs = jobRepository.findAll();
-            model.addAttribute("title", "All Jobs");
-        } else {
-            jobs = JobData.findByColumnAndValue(column, value, jobRepository.findAll());
-            model.addAttribute("title", "Jobs with " + columnChoices.get(column) + ": " + value);
-        }
-        model.addAttribute("jobs", jobs);
-
-        return "list-jobs";
-    }
+    return "list-jobs";
+  }
 }
